@@ -55,6 +55,10 @@ namespace WindowsFormsApp1
                     var line = text.Split(ch);                   
                     textBox1.Text = line[1].Trim();
                     textBox2.Text = line[3].Trim();
+                    label3.Text = "Client Version = " + line[5].Trim();
+                    label4.Text = "Source Revision = " + line[7].Trim();
+                    label5.Text = "Version Date = " + line[9].Trim();
+                    label6.Text = "Version Time = " + line[11].Trim();
                     isReaded = true;
                     sr.Close();                   
                 } 
@@ -94,16 +98,7 @@ namespace WindowsFormsApp1
                         label4.Text = "Source Revision = " + text1[15].Trim();
                         label5.Text = "Version Date = " + text1[17].Trim();
                         label6.Text = "Version Time = " + text1[19].Trim();
-                        str.Close();
-
-
-                        StreamWriter sw = new StreamWriter(settingsFileName);
-
-                        sw.WriteLine("Client Version = " + label3.Text);
-                        sw.WriteLine("Source Revision = " + label4.Text);
-                        sw.WriteLine("Version Date = " + label5.Text);
-                        sw.WriteLine("Version Time = " + label6.Text);
-                        sw.Close();
+                        str.Close();                        
 
 
 
@@ -126,6 +121,11 @@ namespace WindowsFormsApp1
 
                 sw.WriteLine("Path = " + textBox1.Text);
                 sw.WriteLine("Distance = " + textBox2.Text);
+                sw.WriteLine(label3.Text);
+                sw.WriteLine(label4.Text);
+                sw.WriteLine(label5.Text);
+                sw.WriteLine(label6.Text);
+                
                 sw.Close();
                 isWrited = true;
             }            
