@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
         string fileName = @"\client.dll";
         static string settingsFileName = "settings.properties";
         string datePath = @"\steamapps\common\dota 2 beta\game\dota";
-        string dateFileName = @"\steam.inf";
+        string dateFileName = @"\steam.inf";    
         string fullPath;
         char[] ch = { '\n', '=' };
 
