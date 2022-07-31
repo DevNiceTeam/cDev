@@ -31,47 +31,32 @@ namespace WindowsFormsApp1
             }
         }
 
-        bool isCreated, fileExists, isWrited = false;
+        bool isCreated, isDllExists, isWrited , isReaded = false;
         string dop = @"\steamapps\common\dota 2 beta\game\dota\bin\win64";
         string fileName = @"\client.dll";
         static string settingsFileName = "settings.properties";
         string datePath = @"\steamapps\common\dota 2 beta\game\dota";
         string dateFileName = @"\steam.inf";
         string fullPath;
+        char[] ch = { '\n', '=' };
 
         void Form1_Load(object sender, EventArgs e)
-        {
+        {            
             if (File.Exists(settingsFileName))
-            {                
+            { 
                 txt("Открываю settings");
                 StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
-                char[] ch = { '\n', '=' };
                 var text = sr.ReadToEnd();   
-                
-
-
-
-
 
                 if (text.Equals("")) // Если файл настроек пустой то ничего пока не делаем 
-                {
-                    txt("Файл пустой");                   
-                }
-                else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox
+                {}
+                else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
                 {
                     var line = text.Split(ch);                   
                     textBox1.Text = line[1].Trim();
                     textBox2.Text = line[3].Trim();
-                    isWrited = true;
-                    sr.Close();
-
-
-
-
-                    StreamReader str = new StreamReader(textBox1.Text + datePath + dateFileName);
-                    var text1 = str.ReadToEnd();
-                    txt(text1);
-                    txt("Файл не пустой"); //TODO:                    
+                    isReaded = true;
+                    sr.Close();                   
                 } 
             }
             else
@@ -97,11 +82,32 @@ namespace WindowsFormsApp1
                     textBox1.Enabled = true;
                     if (File.Exists(textBox1.Text + dop + fileName))
                     {
-                        fileExists = true;
+                        isDllExists = true;
                         textBox2.Enabled = true;
                         button2.Enabled = true;
                         checkBox1.Enabled = true;
-                        txt("Файл 1client.dll есть");
+
+                        StreamReader str = new StreamReader(textBox1.Text + datePath + dateFileName);
+                        var text1 = str.ReadToEnd().Split(ch);
+
+                        label3.Text = "Client Version = " + text1[1].Trim();
+                        label4.Text = "Source Revision = " + text1[15].Trim();
+                        label5.Text = "Version Date = " + text1[17].Trim();
+                        label6.Text = "Version Time = " + text1[19].Trim();
+                        str.Close();
+
+
+                        StreamWriter sw = new StreamWriter(settingsFileName);
+
+                        sw.WriteLine("Client Version = " + label3.Text);
+                        sw.WriteLine("Source Revision = " + label4.Text);
+                        sw.WriteLine("Version Date = " + label5.Text);
+                        sw.WriteLine("Version Time = " + label6.Text);
+                        sw.Close();
+
+
+
+                        txt("Файл client.dll есть");
                     }
                     else
                     {
@@ -118,19 +124,11 @@ namespace WindowsFormsApp1
                 txt("Записываю");
                 StreamWriter sw = new StreamWriter(settingsFileName);
 
-                sw.WriteLineAsync("Path = " + textBox1.Text);
-                sw.WriteAsync("Distance = " + textBox2.Text);
+                sw.WriteLine("Path = " + textBox1.Text);
+                sw.WriteLine("Distance = " + textBox2.Text);
                 sw.Close();
                 isWrited = true;
-            }
-            else if(isWrited == true)
-            {
-                txt("уже записан");
-            }
-            else
-            {
-                txt("Не Записываю");
-            }
+            }            
         }
 
         static void txt(String s)
