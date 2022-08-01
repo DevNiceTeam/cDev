@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Extensions.Primitives;
+using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
 {
@@ -18,7 +19,7 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
-        }        
+        }
 
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -31,12 +32,12 @@ namespace WindowsFormsApp1
             }
         }
 
-        bool isCreated, isDllExists, isWrited , isReaded = false;
+        bool isCreated, isDllExists, isWrited, isReaded = false;
         string dop = @"\steamapps\common\dota 2 beta\game\dota\bin\win64";
         string fileName = @"\client.dll";
         static string settingsFileName = "settings.properties";
         string datePath = @"\steamapps\common\dota 2 beta\game\dota";
-        string dateFileName = @"\steam.inf";    
+        string dateFileName = @"\steam.inf";
         string fullPath;
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
@@ -44,38 +45,39 @@ namespace WindowsFormsApp1
 
         ToolTip t = new ToolTip();
 
-       
+
 
         void Form1_Load(object sender, EventArgs e)
-        {            
+        {
             if (File.Exists(settingsFileName))
-            { 
+            {
                 txt("Открываю settings");
                 StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
-                var text = sr.ReadToEnd();   
+                var text = sr.ReadToEnd();
 
                 if (text.Equals("")) // Если файл настроек пустой то ничего пока не делаем 
                 {
                     button3.PerformClick();
+                    isRuLang = true;
                 }
                 else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
                 {
                     var line = text.Split(ch);
                     string t = line[13].Trim();
-                   
+
                     if (t.Equals("RU"))
                     {
                         button3.PerformClick();
                         textBox1.Text = line[1].Trim();
                         textBox2.Text = line[3].Trim();
-                        txt($"Сейчас записан {t}") ;
+                        txt($"Сейчас записан {t}");
                         isRuLang = true;
                         isEnLang = false;
                         label3.Text = "Версия клиента = " + line[5].Trim();
                         label4.Text = "Версия исх.кода = " + line[7].Trim();
                         label5.Text = "Дата релиза = " + line[9].Trim();
                         label6.Text = "Время релиза = " + line[11].Trim();
-                    }    
+                    }
                     else
                     {
                         button4.PerformClick();
@@ -88,8 +90,8 @@ namespace WindowsFormsApp1
                         label4.Text = "Source Revision = " + line[7].Trim();
                         label5.Text = "Version Date = " + line[9].Trim();
                         label6.Text = "Version Time = " + line[11].Trim();
-                    }                  
-                    isReaded = true;                                       
+                    }
+                    isReaded = true;
                 }
                 sr.Close();
             }
@@ -100,12 +102,12 @@ namespace WindowsFormsApp1
                 isCreated = true;
                 button3.PerformClick();
                 fst.Close();
-           }
+            }
         }
 
         private void textBox2_MouseHover(object sender, EventArgs e)
         {
-            if(isEnLang)
+            if (isEnLang)
             {
                 t.SetToolTip(textBox2, @"Default range:1134
 Recommended range:1550");
@@ -115,10 +117,10 @@ Recommended range:1550");
                 t.SetToolTip(textBox2, @"Стандартная дальность:1134
 Рекомендуемая дальность:1550");
             }
-           
+
         }
 
-        
+
         /// <summary>
         /// Ru lang onBtnClick
         /// </summary>
@@ -133,8 +135,8 @@ Recommended range:1550");
 
             button1.Text = "Выбрать";
             button2.Text = "Применить";
-            checkBox1.Text = "Сохранить настройки";            
-            if (isReaded)
+            checkBox1.Text = "Сохранить настройки";
+            if (isReaded || isWrited)
             {
                 textBox1.Text = line[1].Trim();
                 textBox2.Text = line[3].Trim();
@@ -142,7 +144,7 @@ Recommended range:1550");
                 label4.Text = "Версия исх.кода = " + line[7].Trim();
                 label5.Text = "Дата релиза = " + line[9].Trim();
                 label6.Text = "Время релиза = " + line[11].Trim();
-            }  
+            }
             else
             {
                 textBox1.Text = "Путь к папке Steam";
@@ -151,7 +153,7 @@ Recommended range:1550");
                 label4.Text = "Версия исх.кода = ";
                 label5.Text = "Дата релиза = ";
                 label6.Text = "Время релиза = ";
-            }  
+            }
             sr.Close();
         }
 
@@ -169,7 +171,7 @@ Recommended range:1550");
             button1.Text = "Select";
             button2.Text = "Apply";
             checkBox1.Text = "Save Settings";
-            if(isReaded)
+            if (isReaded || isWrited)
             {
                 textBox1.Text = line[1].Trim();
                 textBox2.Text = line[3].Trim();
@@ -246,18 +248,19 @@ Recommended range:1550");
             {
                 txt("Записываю");
                 StreamWriter sw = new StreamWriter(settingsFileName);
-                string[] str = { label3.Text, label4.Text, label5.Text, label6.Text };
-                foreach(string str2 in str)
-                {
-                    str2.Split(ch);
-                    Console.WriteLine(str2);
-                }
+                
+                var text1 = label3.Text.Split(ch);
+                var text2 = label4.Text.Split(ch);  
+                var text3 = label5.Text.Split(ch);  
+                var text4 = label6.Text.Split(ch);
+                var index = 1;
+
                 sw.WriteLine("Path = " + textBox1.Text);
                 sw.WriteLine("Distance = " + textBox2.Text);
-                sw.WriteLine("Client Version = " + label3.Text.Split(ch).ToString().Trim());
-                sw.WriteLine("Source Revision = " + label4.Text.Split(ch).ToString().Trim());
-                sw.WriteLine("Version Date = " + label5.Text.Split(ch).ToString().Trim());
-                sw.WriteLine("Version Time = " + label6.Text.Split(ch).ToString().Trim());
+                sw.WriteLine("Client Version = " + text1[index].Trim());
+                sw.WriteLine("Source Revision = " + text2[index].Trim());
+                sw.WriteLine("Version Date = " + text3[index].Trim());
+                sw.WriteLine("Version Time = " + text4[index].Trim());
                 if (isEnLang)
                 {
                     sw.WriteLine("Language = EN");
