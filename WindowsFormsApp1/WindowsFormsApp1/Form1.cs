@@ -39,6 +39,12 @@ namespace WindowsFormsApp1
         string dateFileName = @"\steam.inf";    
         string fullPath;
         char[] ch = { '\n', '=' };
+        bool isRuLang, isEnLang;
+
+
+        ToolTip t = new ToolTip();
+        
+
 
         void Form1_Load(object sender, EventArgs e)
         {            
@@ -55,13 +61,27 @@ namespace WindowsFormsApp1
                     var line = text.Split(ch);                   
                     textBox1.Text = line[1].Trim();
                     textBox2.Text = line[3].Trim();
-                    label3.Text = "Client Version = " + line[5].Trim();
-                    label4.Text = "Source Revision = " + line[7].Trim();
-                    label5.Text = "Version Date = " + line[9].Trim();
-                    label6.Text = "Version Time = " + line[11].Trim();
-                    isReaded = true;
-                    sr.Close();                   
-                } 
+                    if(!isEnLang)
+                    {
+                        label3.Text = "Client Version = " + line[5].Trim();
+                        label4.Text = "Source Revision = " + line[7].Trim();
+                        label5.Text = "Version Date = " + line[9].Trim();
+                        label6.Text = "Version Time = " + line[11].Trim();
+                        isEnLang = true;
+                        isRuLang = false;                        
+                    }
+                    else
+                    {
+                        label3.Text = "Версия клиента = " + line[5].Trim();
+                        label4.Text = "Версия исх.кода = " + line[7].Trim();
+                        label5.Text = "Дата релиза = " + line[9].Trim();
+                        label6.Text = "Время релиза = " + line[11].Trim();
+                        isEnLang = false;
+                        isRuLang = true;
+                    }
+                    isReaded = true;                                       
+                }
+                sr.Close();
             }
             else
             {
@@ -69,8 +89,95 @@ namespace WindowsFormsApp1
                 txt("Создаю settings");
                 isCreated = true;
                 fst.Close();
+           }
+        }
+
+        private void textBox2_MouseHover(object sender, EventArgs e)
+        {
+            if(isEnLang)
+            {
+                t.SetToolTip(textBox2, @"Default range:1134
+Recommended range:1550");
             }
-        }       
+            else
+            {
+                t.SetToolTip(textBox2, @"Стандартная дальность:1134
+Рекомендуемая дальность:1550");
+            }
+           
+        }
+
+        
+        /// <summary>
+        /// Ru lang onBtnClick
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            isEnLang = false;
+            isRuLang = true;
+            StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+            var line = sr.ReadToEnd().Split(ch);
+
+            button1.Text = "Выбрать";
+            button2.Text = "Применить";
+            checkBox1.Text = "Сохранить настройки";            
+            if (isReaded)
+            {
+                textBox1.Text = line[1].Trim();
+                textBox2.Text = line[3].Trim();
+                label3.Text = "Версия клиента = " + line[5].Trim();
+                label4.Text = "Версия исх.кода = " + line[7].Trim();
+                label5.Text = "Дата релиза = " + line[9].Trim();
+                label6.Text = "Время релиза = " + line[11].Trim();
+            }  
+            else
+            {
+                textBox1.Text = "Путь к папке Steam";
+                textBox2.Text = "Укажите дальность камеры";
+                label3.Text = "Версия клиента = ";
+                label4.Text = "Версия исх.кода = ";
+                label5.Text = "Дата релиза = ";
+                label6.Text = "Время релиза = ";
+            }  
+            sr.Close();
+        }
+
+        /// <summary>
+        /// En lang onBtnClick
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            isRuLang = false;
+            isEnLang = true;
+            StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+            var line = sr.ReadToEnd().Split(ch);
+            button1.Text = "Select";
+            button2.Text = "Apply";
+            checkBox1.Text = "Save Settings";
+            if(isReaded)
+            {
+                textBox1.Text = line[1].Trim();
+                textBox2.Text = line[3].Trim();
+                label3.Text = "Client Version = " + line[5].Trim();
+                label4.Text = "Source Revision = " + line[7].Trim();
+                label5.Text = "Version Date = " + line[9].Trim();
+                label6.Text = "Version Time = " + line[11].Trim();
+            }
+            else
+            {
+                textBox1.Text = "Steam folder path";
+                textBox2.Text = "Specify camera range";
+                label3.Text = "Client Version = ";
+                label4.Text = "Source Revision = ";
+                label5.Text = "Version Date = ";
+                label6.Text = "Version Time = ";
+            }
+            sr.Close();
+        }
 
         void button1_Click(object sender, EventArgs e)
         {
@@ -94,10 +201,20 @@ namespace WindowsFormsApp1
                         StreamReader str = new StreamReader(textBox1.Text + datePath + dateFileName);
                         var text1 = str.ReadToEnd().Split(ch);
 
-                        label3.Text = "Client Version = " + text1[1].Trim();
-                        label4.Text = "Source Revision = " + text1[15].Trim();
-                        label5.Text = "Version Date = " + text1[17].Trim();
-                        label6.Text = "Version Time = " + text1[19].Trim();
+                        if (!isEnLang)
+                        {
+                            label3.Text = "Client Version = " + text1[1].Trim();
+                            label4.Text = "Source Revision = " + text1[15].Trim();
+                            label5.Text = "Version Date = " + text1[17].Trim();
+                            label6.Text = "Version Time = " + text1[19].Trim();
+                        }
+                        else
+                        {
+                            label3.Text = "Версия клиента = " + text1[1].Trim();
+                            label4.Text = "Версия исх.кода = " + text1[15].Trim();
+                            label5.Text = "Дата релиза = " + text1[17].Trim();
+                            label6.Text = "Время релиза = " + text1[19].Trim();
+                        }
                         str.Close();                        
 
 
@@ -125,7 +242,15 @@ namespace WindowsFormsApp1
                 sw.WriteLine(label4.Text);
                 sw.WriteLine(label5.Text);
                 sw.WriteLine(label6.Text);
-                
+                if (!isEnLang)
+                {
+                    sw.WriteLine("Language = EN");
+                }
+                else
+                {
+                    sw.WriteLine("Language = RU");
+                }
+                        
                 sw.Close();
                 isWrited = true;
             }            
