@@ -80,7 +80,7 @@
             this.checkBox1.Enabled = false;
             this.checkBox1.Font = new System.Drawing.Font("Univers Condensed", 10.8F, System.Drawing.FontStyle.Bold);
             this.checkBox1.ForeColor = System.Drawing.Color.White;
-            this.checkBox1.Location = new System.Drawing.Point(787, 4);
+            this.checkBox1.Location = new System.Drawing.Point(759, 4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(127, 26);
             this.checkBox1.TabIndex = 3;
