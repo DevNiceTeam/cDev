@@ -67,8 +67,8 @@ namespace WindowsFormsApp1
                         label4.Text = "Source Revision = " + line[7].Trim();
                         label5.Text = "Version Date = " + line[9].Trim();
                         label6.Text = "Version Time = " + line[11].Trim();
-                        isEnLang = true;
-                        isRuLang = false;                        
+                        isEnLang = true;//TODO
+                        isRuLang = false; //TODO                       
                     }
                     else
                     {
@@ -76,8 +76,8 @@ namespace WindowsFormsApp1
                         label4.Text = "Версия исх.кода = " + line[7].Trim();
                         label5.Text = "Дата релиза = " + line[9].Trim();
                         label6.Text = "Время релиза = " + line[11].Trim();
-                        isEnLang = false;
-                        isRuLang = true;
+                        isEnLang = false;//TODO
+                        isRuLang = true;//TODO
                     }
                     isReaded = true;                                       
                 }
