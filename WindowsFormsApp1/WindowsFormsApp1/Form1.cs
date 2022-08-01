@@ -43,8 +43,8 @@ namespace WindowsFormsApp1
 
 
         ToolTip t = new ToolTip();
-        
 
+       
 
         void Form1_Load(object sender, EventArgs e)
         {            
@@ -55,30 +55,40 @@ namespace WindowsFormsApp1
                 var text = sr.ReadToEnd();   
 
                 if (text.Equals("")) // Если файл настроек пустой то ничего пока не делаем 
-                {}
+                {
+                    button3.PerformClick();
+                }
                 else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
                 {
-                    var line = text.Split(ch);                   
-                    textBox1.Text = line[1].Trim();
-                    textBox2.Text = line[3].Trim();
-                    if(!isEnLang)
+                    var line = text.Split(ch);
+                    string t = line[13].Trim();
+                   
+                    if (t.Equals("RU"))
                     {
-                        label3.Text = "Client Version = " + line[5].Trim();
-                        label4.Text = "Source Revision = " + line[7].Trim();
-                        label5.Text = "Version Date = " + line[9].Trim();
-                        label6.Text = "Version Time = " + line[11].Trim();
-                        isEnLang = true;//TODO
-                        isRuLang = false; //TODO                       
-                    }
-                    else
-                    {
+                        button3.PerformClick();
+                        textBox1.Text = line[1].Trim();
+                        textBox2.Text = line[3].Trim();
+                        txt($"Сейчас записан {t}") ;
+                        isRuLang = true;
+                        isEnLang = false;
                         label3.Text = "Версия клиента = " + line[5].Trim();
                         label4.Text = "Версия исх.кода = " + line[7].Trim();
                         label5.Text = "Дата релиза = " + line[9].Trim();
                         label6.Text = "Время релиза = " + line[11].Trim();
-                        isEnLang = false;//TODO
-                        isRuLang = true;//TODO
-                    }
+                    }    
+                    else
+                    {
+                        button4.PerformClick();
+                        textBox1.Text = line[1].Trim();
+                        textBox2.Text = line[3].Trim();
+                        txt($"Сейчас записан {t}");
+                        isRuLang = false;
+                        isEnLang = true;
+                        label3.Text = "Client Version = " + line[5].Trim();
+                        label4.Text = "Source Revision = " + line[7].Trim();
+                        label5.Text = "Version Date = " + line[9].Trim();
+                        label6.Text = "Version Time = " + line[11].Trim();
+                    }                  
                     isReaded = true;                                       
                 }
                 sr.Close();
@@ -88,6 +98,7 @@ namespace WindowsFormsApp1
                 FileStream fst = new FileStream(settingsFileName, FileMode.Create);
                 txt("Создаю settings");
                 isCreated = true;
+                button3.PerformClick();
                 fst.Close();
            }
         }
@@ -113,7 +124,7 @@ Recommended range:1550");
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button3_Click(object sender, EventArgs e)
+        void button3_Click(object sender, EventArgs e)
         {
             isEnLang = false;
             isRuLang = true;
@@ -201,7 +212,7 @@ Recommended range:1550");
                         StreamReader str = new StreamReader(textBox1.Text + datePath + dateFileName);
                         var text1 = str.ReadToEnd().Split(ch);
 
-                        if (!isEnLang)
+                        if (isEnLang)
                         {
                             label3.Text = "Client Version = " + text1[1].Trim();
                             label4.Text = "Source Revision = " + text1[15].Trim();
@@ -235,14 +246,19 @@ Recommended range:1550");
             {
                 txt("Записываю");
                 StreamWriter sw = new StreamWriter(settingsFileName);
-
+                string[] str = { label3.Text, label4.Text, label5.Text, label6.Text };
+                foreach(string str2 in str)
+                {
+                    str2.Split(ch);
+                    Console.WriteLine(str2);
+                }
                 sw.WriteLine("Path = " + textBox1.Text);
                 sw.WriteLine("Distance = " + textBox2.Text);
-                sw.WriteLine(label3.Text);
-                sw.WriteLine(label4.Text);
-                sw.WriteLine(label5.Text);
-                sw.WriteLine(label6.Text);
-                if (!isEnLang)
+                sw.WriteLine("Client Version = " + label3.Text.Split(ch).ToString().Trim());
+                sw.WriteLine("Source Revision = " + label4.Text.Split(ch).ToString().Trim());
+                sw.WriteLine("Version Date = " + label5.Text.Split(ch).ToString().Trim());
+                sw.WriteLine("Version Time = " + label6.Text.Split(ch).ToString().Trim());
+                if (isEnLang)
                 {
                     sw.WriteLine("Language = EN");
                 }
