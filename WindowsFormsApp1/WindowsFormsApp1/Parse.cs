@@ -14,25 +14,34 @@ using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
 {
-    internal class Parse
+    class Parse
     {
-        public Form1 f;
+        static string settingsFileName = "settings.properties";
+        char[] ch = { '\n', '=' };
         public void strat()
         {
+            StreamReader sr2 = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+            var text = sr2.ReadToEnd();
+            var param = text.Split(ch);
+
             string p = "client.dll";
             string line;
 
 
-            using (StreamReader sr = new StreamReader(f.getPath().Text))
+            Console.WriteLine(p);
+           
+            using (StreamReader sr = new StreamReader(p))
             {
                 line = sr.ReadToEnd();
             }
 
+            Console.WriteLine(param[3].Trim());
             Regex reg = new Regex("\\b1134|1200\\b");
-            line = reg.Replace(line, f.getDistance().Text);
+            line = reg.Replace(line, param[3].Trim());
 
+            sr2.Close();
 
-            // line = line.Replace("1134", "1550"); 
+            // line = line.Replace("1134", "1550");
             using (StreamWriter sw = new StreamWriter(p))
             {
                 sw.Write(line);

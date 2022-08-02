@@ -274,18 +274,8 @@ Recommended range:1550");
                 isWrited = true;
                 Parse p = new Parse();
                 p.strat();
-               
             }            
-        }
-
-        public TextBox getDistance()
-        {
-            return textBox2;
-        }
-        public TextBox getPath()
-        {
-            return textBox1;
-        }
+        }      
 
         static void txt(String s)
         {
