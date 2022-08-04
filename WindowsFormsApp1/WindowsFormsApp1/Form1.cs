@@ -35,10 +35,11 @@ namespace WindowsFormsApp1
         bool isCreated, isDllExists, isWrited, isReaded = false;
         string dop = @"\steamapps\common\dota 2 beta\game\dota\bin\win64";
         string fileName = @"\client.dll";
-        static string settingsFileName = "settings.properties";
+        public string settingsFileName = "settings.properties";
         string datePath = @"\steamapps\common\dota 2 beta\game\dota";
         string dateFileName = @"\steam.inf";
         string fullPath;
+        public string oldParam;
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
 
@@ -90,10 +91,12 @@ namespace WindowsFormsApp1
                         label4.Text = "Source Revision = " + line[7].Trim();
                         label5.Text = "Version Date = " + line[9].Trim();
                         label6.Text = "Version Time = " + line[11].Trim();
+                        
                     }
                     isReaded = true;
+                    oldParam = textBox1.Text;
                 }
-                sr.Close();
+                sr.Close();                
             }
             else
             {
@@ -272,8 +275,8 @@ Recommended range:1550");
                         
                 sw.Close();
                 isWrited = true;
-                Parse p = new Parse();
-                p.strat();
+                new Parse(this).pars();
+                
             }            
         }      
 
