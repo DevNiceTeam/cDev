@@ -23,50 +23,59 @@ namespace WindowsFormsApp1
         }
 
         public void pars()
-        {            
-            Console.WriteLine(f.textBox1.Text);
-            Console.WriteLine(f.textBox2.Text);           
-
-            string p = "client.dll";
+        {                    
             string line;
+            var p = "client.dll";
+            Console.WriteLine(f.fullPath);
 
-
-            Console.WriteLine(p);
-
-            using (StreamReader sr = new StreamReader(p))
+            using (StreamReader sr = new StreamReader(f.fullPath, Encoding.Default, false))
             {
                 line = sr.ReadToEnd();
             }
 
-            Regex reg = new Regex("\\b1134|1200\\b");
-            
-
-            if (reg.Match(line).Success)
+            if(f.isWrited)
             {
-                Console.WriteLine("Найдено1");
-                line = reg.Replace(line, f.textBox2.Text);
-            }
-            else
-            {
-                Console.WriteLine("Не найдено1");
-                Regex reg1 = new Regex($"\\b{f.textBox2.Text}\\b");
-                if(reg1.Match(line).Success)
+                Regex reg = new Regex("\\b1200|1134\\b");
+                Console.WriteLine("+++++ " + f.oldParam);
+                
+                if (reg.Match(line).Success)
                 {
-                    line = reg1.Replace(line, f.oldParam);
-                    Console.WriteLine("Найдено2");
+                    Console.WriteLine("Найдено1");
+                    line = reg.Replace(line, f.textBox2.Text);
                 }
                 else
                 {
-                    Console.WriteLine("Не найдено2");
-                }                
+                    Console.WriteLine("Не найдено1");
+                    Regex reg1 = new Regex($"\\b{f.oldParam}\\b");
+                    if (reg1.Match(line).Success)
+                    {
+                        line = reg1.Replace(line, f.textBox2.Text);
+                        Console.WriteLine("Найдено2");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Не найдено2");
+                    }
+                }
+            }
+            else
+            {
+                Regex reg = new Regex("\\b1200|1134\\b");
+
+                if (reg.Match(line).Success)
+                {
+                    Console.WriteLine("Найдено1");
+                    line = reg.Replace(line, f.textBox2.Text);
+                }
+                else
+                {
+                    Console.WriteLine("Нет данных");
+                }               
             }
 
-
-
-            using (StreamWriter sw = new StreamWriter(p))
+            using (StreamWriter sw = new StreamWriter(f.fullPath, false, Encoding.Default))
             {
-                sw.Write(line);
-                sw.Flush();
+                sw.Write(line);               
             }
         }
     }   

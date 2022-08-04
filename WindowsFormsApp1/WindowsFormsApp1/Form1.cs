@@ -32,14 +32,15 @@ namespace WindowsFormsApp1
             }
         }
 
-        bool isCreated, isDllExists, isWrited, isReaded = false;
+        bool isCreated, isDllExists, isReaded = false;
+        public bool isWrited = false;
         string dop = @"\steamapps\common\dota 2 beta\game\dota\bin\win64";
         string fileName = @"\client.dll";
         public string settingsFileName = "settings.properties";
-        string datePath = @"\steamapps\common\dota 2 beta\game\dota";
-        string dateFileName = @"\steam.inf";
-        string fullPath;
-        public string oldParam;
+        string infoPath = @"\steamapps\common\dota 2 beta\game\dota";
+        string infoFileName = @"\steam.inf";
+        public string fullPath;
+        public string oldParam;        
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
 
@@ -94,7 +95,7 @@ namespace WindowsFormsApp1
                         
                     }
                     isReaded = true;
-                    oldParam = textBox1.Text;
+                    oldParam = textBox2.Text;
                 }
                 sr.Close();                
             }
@@ -205,16 +206,16 @@ Recommended range:1550");
                 if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     textBox1.Text = ofd.FileName;
-                    fullPath = ofd.FileName;
+                    fullPath = textBox1.Text + dop + fileName;
                     textBox1.Enabled = true;
-                    if (File.Exists(textBox1.Text + dop + fileName))
+                    if (File.Exists(fullPath))
                     {
                         isDllExists = true;
                         textBox2.Enabled = true;
                         button2.Enabled = true;
                         checkBox1.Enabled = true;
 
-                        StreamReader str = new StreamReader(textBox1.Text + datePath + dateFileName);
+                        StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
                         var text1 = str.ReadToEnd().Split(ch);
 
                         if (isEnLang)
@@ -232,8 +233,6 @@ Recommended range:1550");
                             label6.Text = "Время релиза = " + text1[19].Trim();
                         }
                         str.Close();                        
-
-
 
                         txt("Файл client.dll есть");
                     }
@@ -277,7 +276,13 @@ Recommended range:1550");
                 isWrited = true;
                 new Parse(this).pars();
                 
-            }            
+            }      
+            else
+            {
+                txt("Меняю");
+                isWrited = false;
+                new Parse(this).pars();
+            }
         }      
 
         static void txt(String s)
