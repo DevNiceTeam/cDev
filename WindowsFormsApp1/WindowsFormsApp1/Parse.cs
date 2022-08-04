@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using Microsoft.Extensions.Primitives;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
@@ -24,8 +15,7 @@ namespace WindowsFormsApp1
 
         public void pars()
         {                    
-            string line;
-            var p = "client.dll";
+            string line;           
             Console.WriteLine(f.fullPath);
 
             using (StreamReader sr = new StreamReader(f.fullPath, Encoding.Default, false))
