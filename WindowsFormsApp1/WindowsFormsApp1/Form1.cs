@@ -12,6 +12,18 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
+        private void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e)
+        {
+
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            notifyIcon1.Visible = false;
+            WindowState = FormWindowState.Normal;
+        }
+
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsDigit(e.KeyChar)))
@@ -34,11 +46,14 @@ namespace WindowsFormsApp1
         public string oldParam;        
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
-
         ToolTip t = new ToolTip();
 
         void Form1_Load(object sender, EventArgs e)
         {
+            notifyIcon1.BalloonTipTitle = "Cum Editor";
+            notifyIcon1.BalloonTipText = isEnLang ? "App minimized" : "Приложение свернуто";
+            notifyIcon1.Text = "Cum Editor";
+
             if (File.Exists(settingsFileName))
             {
                 txt("Открываю settings");
@@ -182,7 +197,7 @@ Recommended range:1550");
                 label6.Text = "Version Time = ";
             }
             sr.Close();
-        }
+        }      
 
         void button1_Click(object sender, EventArgs e)
         {
@@ -247,10 +262,10 @@ Recommended range:1550");
 
                 sw.WriteLine("Path = " + textBox1.Text);
                 sw.WriteLine("Distance = " + textBox2.Text);
-                sw.WriteLine("Client Version = " + text1[index].Trim());
-                sw.WriteLine("Source Revision = " + text2[index].Trim());
-                sw.WriteLine("Version Date = " + text3[index].Trim());
-                sw.WriteLine("Version Time = " + text4[index].Trim());
+                sw.WriteLine("ClientVersion = " + text1[index].Trim());
+                sw.WriteLine("SourceRevision = " + text2[index].Trim());
+                sw.WriteLine("VersionDate = " + text3[index].Trim());
+                sw.WriteLine("VersionTime = " + text4[index].Trim());
                 if (isEnLang)
                 {
                     sw.WriteLine("Language = EN");
@@ -276,6 +291,6 @@ Recommended range:1550");
         static void txt(String s)
         {
             Console.WriteLine(s);           
-        }
+        }        
     }
 }
