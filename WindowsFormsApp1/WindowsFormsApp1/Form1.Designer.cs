@@ -41,6 +41,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -89,7 +90,7 @@
             // 
             // button2
             // 
-            this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
+            this.button2.BackgroundImage = global::CumEditor.Properties.Resources.Без_имени_3;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button2.Enabled = false;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -168,7 +169,7 @@
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.Transparent;
-            this.button3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button3.BackgroundImage")));
+            this.button3.BackgroundImage = global::CumEditor.Properties.Resources.Без_названия;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Location = new System.Drawing.Point(433, 2);
@@ -181,7 +182,7 @@
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.Transparent;
-            this.button4.BackgroundImage = global::WindowsFormsApp1.Properties.Resources.dN7HdshVnbozz7f9;
+            this.button4.BackgroundImage = global::CumEditor.Properties.Resources.dN7HdshVnbozz7f9;
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.Location = new System.Drawing.Point(496, 2);
@@ -191,13 +192,27 @@
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Gunplay", 16.2F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(774, 137);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(112, 34);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Готово";
+            this.label1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::CumEditor.Properties.Resources._00939dff0059e823658afe98bb6d87a4;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(968, 564);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label6);
@@ -236,6 +251,7 @@
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.TextBox textBox2;
+        public System.Windows.Forms.Label label1;
     }
 }
 

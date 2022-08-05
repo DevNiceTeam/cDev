@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WindowsFormsApp1.Properties {
+namespace CumEditor.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WindowsFormsApp1.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WindowsFormsApp1.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CumEditor.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace WindowsFormsApp1.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap a24c6362a5fa19502f239b65c57daa17 {
+        internal static System.Drawing.Bitmap _00939dff0059e823658afe98bb6d87a4 {
             get {
-                object obj = ResourceManager.GetObject("a24c6362a5fa19502f239b65c57daa17", resourceCulture);
+                object obj = ResourceManager.GetObject("00939dff0059e823658afe98bb6d87a4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -76,6 +76,26 @@ namespace WindowsFormsApp1.Properties {
         internal static System.Drawing.Bitmap dN7HdshVnbozz7f9 {
             get {
                 object obj = ResourceManager.GetObject("dN7HdshVnbozz7f9", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Без_имени_3 {
+            get {
+                object obj = ResourceManager.GetObject("Без-имени-3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Без_названия {
+            get {
+                object obj = ResourceManager.GetObject("Без названия", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

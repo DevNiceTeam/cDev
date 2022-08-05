@@ -35,10 +35,7 @@ namespace WindowsFormsApp1
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
 
-
         ToolTip t = new ToolTip();
-
-
 
         void Form1_Load(object sender, EventArgs e)
         {
@@ -94,9 +91,9 @@ namespace WindowsFormsApp1
             {
                 FileStream fst = new FileStream(settingsFileName, FileMode.Create);
                 txt("Создаю settings");
-                isCreated = true;
-                button3.PerformClick();
+                isCreated = true;                
                 fst.Close();
+                button3.PerformClick();
             }
         }
 
