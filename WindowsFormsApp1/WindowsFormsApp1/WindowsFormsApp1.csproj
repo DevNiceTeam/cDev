@@ -272,6 +272,14 @@
   <ItemGroup>
     <Content Include="Bokehlicia-Pacifica-Steam-2.ico" />
     <Content Include="license.txt" />
+    <None Include="Resources\editedICO.png" />
+    <None Include="Resources\icons8-приложение-toggl-64.png" />
+    <None Include="Resources\icons8-дота-2-64.png" />
+    <None Include="Resources\icons8-удалить-64.png" />
+    <None Include="Resources\icons8-свернуть-окно-64.png" />
+    <None Include="Resources\EditICOsver.jpg" />
+    <None Include="Resources\CloseICO.jpg" />
+    <None Include="Resources\icons8-свернуть-окно-96.png" />
     <None Include="Resources\Без названия.png" />
     <None Include="Resources\Без-имени-3.jpg" />
     <None Include="Resources\00939dff0059e823658afe98bb6d87a4.jpg" />

@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -10,18 +11,78 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e)
-        {
-
-        }
+        }       
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
             notifyIcon1.Visible = false;
             WindowState = FormWindowState.Normal;
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+                notifyIcon1.Visible = true;
+                notifyIcon1.ShowBalloonTip(1000);
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                notifyIcon1.Visible = false;
+            }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e) //Закрыть приложение
+        {
+            this.Close();
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e) //Свернуть приложение
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {            
+            pictureBox3.Enabled = true;
+            if(File.Exists(clientPath))
+            {
+                Process.Start(clientPath);
+            }
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            foreach (var process in Process.GetProcessesByName("dota2"))
+            {
+                process.Kill();
+            }
+        }
+
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTCLIENT = 0x1;
+        private const int HTCAPTION = 0x2;
+        protected override void WndProc(ref Message m) // Перетаскивание окна без рамки
+        {
+            switch (m.Msg)
+            {
+                case WM_NCHITTEST:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == HTCLIENT)
+                    {
+                        m.Result = (IntPtr)HTCAPTION;
+                        return;
+                    }
+                    break;
+            }
+            base.WndProc(ref m);
         }
 
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
@@ -42,17 +103,15 @@ namespace WindowsFormsApp1
         public string settingsFileName = "settings.properties";
         string infoPath = @"\steamapps\common\dota 2 beta\game\dota";
         string infoFileName = @"\steam.inf";
+        string clientPath = @"\steamapps\common\dota 2 beta\game\bin\win64\dota2.exe";
         public string fullPath;
         public string oldParam;        
         char[] ch = { '\n', '=' };
-        bool isRuLang, isEnLang;
-        ToolTip t = new ToolTip();
+        bool isRuLang, isEnLang;        
 
         void Form1_Load(object sender, EventArgs e)
         {
             notifyIcon1.BalloonTipTitle = "Cum Editor";
-            notifyIcon1.BalloonTipText = isEnLang ? "App minimized" : "Приложение свернуто";
-            notifyIcon1.Text = "Cum Editor";
 
             if (File.Exists(settingsFileName))
             {
@@ -114,6 +173,7 @@ namespace WindowsFormsApp1
 
         private void textBox2_MouseHover(object sender, EventArgs e)
         {
+            ToolTip t = new ToolTip();
             if (isEnLang)
             {
                 t.SetToolTip(textBox2, @"Default range:1134
@@ -139,10 +199,13 @@ Recommended range:1550");
             isRuLang = true;
             StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
             var line = sr.ReadToEnd().Split(ch);
-
+            notifyIcon1.BalloonTipText = "Приложение свернуто";
+            closeToolStripMenuItem.Text = "Выход";
             button1.Text = "Выбрать";
             button2.Text = "Применить";
             checkBox1.Text = "Сохранить настройки";
+            label1.Text = "Готово";
+            label2.Text = "Информация о клиенте:";
             if (isReaded || isWrited)
             {
                 textBox1.Text = line[1].Trim();
@@ -175,9 +238,13 @@ Recommended range:1550");
             isEnLang = true;
             StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
             var line = sr.ReadToEnd().Split(ch);
+            notifyIcon1.BalloonTipText = "App minimized";
+            closeToolStripMenuItem.Text = "Exit";
             button1.Text = "Select";
             button2.Text = "Apply";
             checkBox1.Text = "Save Settings";
+            label1.Text = "Ready";
+            label2.Text = "Dota Client Info:";
             if (isReaded || isWrited)
             {
                 textBox1.Text = line[1].Trim();
@@ -197,7 +264,7 @@ Recommended range:1550");
                 label6.Text = "Version Time = ";
             }
             sr.Close();
-        }      
+        }        
 
         void button1_Click(object sender, EventArgs e)
         {
