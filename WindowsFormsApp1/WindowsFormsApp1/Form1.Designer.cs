@@ -46,6 +46,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.runGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -236,21 +238,39 @@
             // 
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Text = "Cum Editor";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runGameToolStripMenuItem,
+            this.exitGameToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(123, 28);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(237, 76);
+            // 
+            // runGameToolStripMenuItem
+            // 
+            this.runGameToolStripMenuItem.Enabled = false;
+            this.runGameToolStripMenuItem.Name = "runGameToolStripMenuItem";
+            this.runGameToolStripMenuItem.Size = new System.Drawing.Size(236, 24);
+            this.runGameToolStripMenuItem.Text = "Запустить клиент игры";
+            this.runGameToolStripMenuItem.Click += new System.EventHandler(this.runGameToolStripMenuItem_Click);
+            // 
+            // exitGameToolStripMenuItem
+            // 
+            this.exitGameToolStripMenuItem.Enabled = false;
+            this.exitGameToolStripMenuItem.Name = "exitGameToolStripMenuItem";
+            this.exitGameToolStripMenuItem.Size = new System.Drawing.Size(236, 24);
+            this.exitGameToolStripMenuItem.Text = "Выйти из игры";
+            this.exitGameToolStripMenuItem.Click += new System.EventHandler(this.exitGameToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(236, 24);
             this.closeToolStripMenuItem.Text = "Выход";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -294,9 +314,13 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.IndianRed;
+            this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.BackgroundImage = global::CumEditor.Properties.Resources.icons8_дота_2_64;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox3.Enabled = false;
             this.pictureBox3.Location = new System.Drawing.Point(600, 1);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(78, 77);
@@ -309,9 +333,11 @@
             this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox4.BackgroundImage = global::CumEditor.Properties.Resources.editedICO;
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox4.Enabled = false;
             this.pictureBox4.Location = new System.Drawing.Point(696, 1);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(80, 77);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox4.TabIndex = 20;
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
@@ -320,6 +346,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackgroundImage = global::CumEditor.Properties.Resources._00939dff0059e823658afe98bb6d87a4;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1285, 727);
@@ -345,10 +372,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximumSize = new System.Drawing.Size(1285, 727);
+            this.MinimumSize = new System.Drawing.Size(1285, 727);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cum Editor";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDoubleClick);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -384,6 +414,8 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.ToolStripMenuItem runGameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitGameToolStripMenuItem;
     }
 }
 

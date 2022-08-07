@@ -2,6 +2,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
@@ -34,9 +36,18 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e) // Трей закрыть приложение
         {
             this.Close();
+        }
+        private void runGameToolStripMenuItem_Click(object sender, EventArgs e) // Трей запуск игры
+        {           
+            pictureBox3_Click(runGameToolStripMenuItem, null);                       
+        }
+
+        private void exitGameToolStripMenuItem_Click(object sender, EventArgs e) // Трей Закрыть игру
+        {                          
+            pictureBox4_Click(exitGameToolStripMenuItem, null);                      
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) //Закрыть приложение
@@ -49,21 +60,26 @@ namespace WindowsFormsApp1
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {            
-            pictureBox3.Enabled = true;
-            if(File.Exists(clientPath))
+        private async void pictureBox3_Click(object sender, EventArgs e) //Запустить игру
+        {
+            if (File.Exists(textBox1.Text + clientPath))
             {
-                Process.Start(clientPath);
+                pictureBox3.Visible = false;
+                await Task.Delay(500);                
+                Process.Start(textBox1.Text + clientPath);
+                pictureBox3.Visible = true;
             }
         }
 
-        private void pictureBox4_Click(object sender, EventArgs e)
+        private async void pictureBox4_Click(object sender, EventArgs e) //закрыть игру
         {
+            pictureBox4.Visible = false;
+            await Task.Delay(500);
             foreach (var process in Process.GetProcessesByName("dota2"))
             {
                 process.Kill();
             }
+            pictureBox4.Visible = true;
         }
 
         private const int WM_NCHITTEST = 0x84;
@@ -107,68 +123,72 @@ namespace WindowsFormsApp1
         public string fullPath;
         public string oldParam;        
         char[] ch = { '\n', '=' };
-        bool isRuLang, isEnLang;        
+        bool isRuLang, isEnLang;
 
         void Form1_Load(object sender, EventArgs e)
         {
             notifyIcon1.BalloonTipTitle = "Cum Editor";
-
+            checkRun(true);
+            Thread thr = new Thread(iterCheckRun);
+            thr.Start();
+            
             if (File.Exists(settingsFileName))
-            {
-                txt("Открываю settings");
-                StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
-                var text = sr.ReadToEnd();
-
-                if (text.Equals("")) // Если файл настроек пустой то ничего пока не делаем 
                 {
-                    button3.PerformClick();
-                    isRuLang = true;
-                }
-                else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
-                {
-                    var line = text.Split(ch);
-                    string t = line[13].Trim();
+                    txt("Открываю settings");
 
-                    if (t.Equals("RU"))
+                    StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+                    var text = sr.ReadToEnd();
+
+                    if (text.Equals("")) // Если файл настроек пустой то ничего пока не делаем 
                     {
                         button3.PerformClick();
-                        textBox1.Text = line[1].Trim();
-                        textBox2.Text = line[3].Trim();
-                        txt($"Сейчас записан {t}");
                         isRuLang = true;
-                        isEnLang = false;
-                        label3.Text = "Версия клиента = " + line[5].Trim();
-                        label4.Text = "Версия исх.кода = " + line[7].Trim();
-                        label5.Text = "Дата релиза = " + line[9].Trim();
-                        label6.Text = "Время релиза = " + line[11].Trim();
                     }
-                    else
+                    else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
                     {
-                        button4.PerformClick();
-                        textBox1.Text = line[1].Trim();
-                        textBox2.Text = line[3].Trim();
-                        txt($"Сейчас записан {t}");
-                        isRuLang = false;
-                        isEnLang = true;
-                        label3.Text = "Client Version = " + line[5].Trim();
-                        label4.Text = "Source Revision = " + line[7].Trim();
-                        label5.Text = "Version Date = " + line[9].Trim();
-                        label6.Text = "Version Time = " + line[11].Trim();
-                        
+                        var line = text.Split(ch);
+                        string t = line[13].Trim();
+
+                        if (t.Equals("RU"))
+                        {
+                            button3.PerformClick();
+                            textBox1.Text = line[1].Trim();
+                            textBox2.Text = line[3].Trim();
+                            txt($"Сейчас записан {t}");
+                            isRuLang = true;
+                            isEnLang = false;
+                            label3.Text = "Версия клиента = " + line[5].Trim();
+                            label4.Text = "Версия исх.кода = " + line[7].Trim();
+                            label5.Text = "Дата релиза = " + line[9].Trim();
+                            label6.Text = "Время релиза = " + line[11].Trim();
+                        }
+                        else
+                        {
+                            button4.PerformClick();
+                            textBox1.Text = line[1].Trim();
+                            textBox2.Text = line[3].Trim();
+                            txt($"Сейчас записан {t}");
+                            isRuLang = false;
+                            isEnLang = true;
+                            label3.Text = "Client Version = " + line[5].Trim();
+                            label4.Text = "Source Revision = " + line[7].Trim();
+                            label5.Text = "Version Date = " + line[9].Trim();
+                            label6.Text = "Version Time = " + line[11].Trim();
+
+                        }
+                        isReaded = true;
+                        oldParam = textBox2.Text;
                     }
-                    isReaded = true;
-                    oldParam = textBox2.Text;
+                    sr.Close();
                 }
-                sr.Close();                
-            }
-            else
-            {
-                FileStream fst = new FileStream(settingsFileName, FileMode.Create);
-                txt("Создаю settings");
-                isCreated = true;                
-                fst.Close();
-                button3.PerformClick();
-            }
+                else
+                {
+                    FileStream fst = new FileStream(settingsFileName, FileMode.Create);
+                    txt("Создаю settings");
+                    isCreated = true;
+                    fst.Close();
+                    button3.PerformClick();
+                }
         }
 
         private void textBox2_MouseHover(object sender, EventArgs e)
@@ -245,6 +265,8 @@ Recommended range:1550");
             checkBox1.Text = "Save Settings";
             label1.Text = "Ready";
             label2.Text = "Dota Client Info:";
+            runGameToolStripMenuItem.Text = "Запустить клиент игры";
+            exitGameToolStripMenuItem.Text = "Выйти из игры";
             if (isReaded || isWrited)
             {
                 textBox1.Text = line[1].Trim();
@@ -281,38 +303,48 @@ Recommended range:1550");
                     if (File.Exists(fullPath))
                     {
                         isDllExists = true;
-                        textBox2.Enabled = true;
-                        button2.Enabled = true;
-                        checkBox1.Enabled = true;
-
-                        StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
-                        var text1 = str.ReadToEnd().Split(ch);
-
-                        if (isEnLang)
+                        if (checkRun(true))
                         {
-                            label3.Text = "Client Version = " + text1[1].Trim();
-                            label4.Text = "Source Revision = " + text1[15].Trim();
-                            label5.Text = "Version Date = " + text1[17].Trim();
-                            label6.Text = "Version Time = " + text1[19].Trim();
+                            txt("игра запущена");
                         }
                         else
                         {
-                            label3.Text = "Версия клиента = " + text1[1].Trim();
-                            label4.Text = "Версия исх.кода = " + text1[15].Trim();
-                            label5.Text = "Дата релиза = " + text1[17].Trim();
-                            label6.Text = "Время релиза = " + text1[19].Trim();
-                        }
-                        str.Close();                        
+                            textBox2.Enabled = true;
+                            button2.Enabled = true;
+                            checkBox1.Enabled = true;
+                            runGameToolStripMenuItem.Visible = true;
+                            exitGameToolStripMenuItem.Enabled = true;                            
 
-                        txt("Файл client.dll есть");
+                            StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
+                            var text1 = str.ReadToEnd().Split(ch);
+
+                            if (isEnLang)
+                            {
+                                label3.Text = "Client Version = " + text1[1].Trim();
+                                label4.Text = "Source Revision = " + text1[15].Trim();
+                                label5.Text = "Version Date = " + text1[17].Trim();
+                                label6.Text = "Version Time = " + text1[19].Trim();
+                            }
+                            else
+                            {
+                                label3.Text = "Версия клиента = " + text1[1].Trim();
+                                label4.Text = "Версия исх.кода = " + text1[15].Trim();
+                                label5.Text = "Дата релиза = " + text1[17].Trim();
+                                label6.Text = "Время релиза = " + text1[19].Trim();
+                            }
+                            str.Close();
+
+                            txt("Файл client.dll есть");
+                        }                       
                     }
                     else
                     {
+                        isDllExists = false;
                         txt("Файла client.dll нет");
                     }
                 }
             }
-        }
+        }       
 
         void button2_Click(object sender, EventArgs e)
         {
@@ -358,6 +390,56 @@ Recommended range:1550");
         static void txt(String s)
         {
             Console.WriteLine(s);           
-        }        
+        }
+
+        private void Form1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        bool checkRun(bool Msg)
+        {
+            if (Process.GetProcessesByName("dota2").Length > 0)
+            {
+                if(Msg)
+                {
+                    if (isEnLang)
+                        MessageBox.Show("The game client is running, for the correct operation of the program, turn off the game!");
+                    else
+                        MessageBox.Show("Клиент игры запущен, для коректной работы программы выключите игру!");
+                }
+                button1.Enabled = false;
+                button2.Enabled = false;
+                pictureBox3.Enabled = false;
+                pictureBox4.Enabled = true;
+                runGameToolStripMenuItem.Enabled = false;
+                exitGameToolStripMenuItem.Enabled = true; 
+                return true;
+                
+            }
+            button1.Enabled = true;            
+            pictureBox3.Enabled = true;
+            pictureBox4.Enabled = false;
+            if(isDllExists)
+            {
+                runGameToolStripMenuItem.Enabled = true;
+            }            
+            exitGameToolStripMenuItem.Enabled = false;
+            return false;
+        }      
+
+        void iterCheckRun()
+        {
+            for(;;)
+            {
+                checkRun(false);
+            }            
+        }
+
+        void checkUpd()
+        {
+            StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
+            var text1 = str.ReadToEnd().Split(ch);
+        }
     }
 }

@@ -1,5 +1,6 @@
-C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\CumEditor.exe
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\CumEditor.exe.config
+C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\CumEditor.exe
+C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\CumEditor.pdb
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\Microsoft.Extensions.Primitives.xml
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\System.Buffers.xml
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\System.Diagnostics.DiagnosticSource.xml
@@ -16,4 +17,3 @@ C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\obj
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csproj.CopyComplete
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\obj\Release\CumEditor.exe
 C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\obj\Release\CumEditor.pdb
-C:\Users\Ахмед\Desktop\code\app1\cDev\WindowsFormsApp1\WindowsFormsApp1\bin\Release\CumEditor.pdb
