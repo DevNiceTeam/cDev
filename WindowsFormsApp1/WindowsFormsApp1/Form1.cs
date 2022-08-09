@@ -52,12 +52,34 @@ namespace WindowsFormsApp1
 
         private void pictureBox1_Click(object sender, EventArgs e) //Закрыть приложение
         {
+            fileSystemWatcher1.Dispose();
+            thr.Abort();
             this.Close();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e) //Свернуть приложение
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void textBox2_MouseClick(object sender, MouseEventArgs e) //Очищаем поле если текст вводится первый раз
+        {
+            textBox2.Text = "";                     
+        }
+
+        private void textBox2_Leave(object sender, EventArgs e)
+        {
+            if (!isWrited | !isReaded | !isDllExists)
+            {
+                if(isEnLang)
+                {
+                    textBox2.Text = "Specify camera range";
+                }
+                else
+                {
+                    textBox2.Text = "Укажите дальность камеры";
+                }                
+            }           
         }
 
         private async void pictureBox3_Click(object sender, EventArgs e) //Запустить игру
@@ -124,14 +146,16 @@ namespace WindowsFormsApp1
         public string oldParam;        
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
+        Thread thr;
 
         void Form1_Load(object sender, EventArgs e)
-        {
+        {            
             notifyIcon1.BalloonTipTitle = "Cum Editor";
+            //button3.PerformClick();
             checkRun(true);
-            Thread thr = new Thread(iterCheckRun);
-            thr.Start();
-            
+            thr = new Thread(iterCheckRun);
+            thr.Start();            
+
             if (File.Exists(settingsFileName))
                 {
                     txt("Открываю settings");
@@ -215,36 +239,44 @@ Recommended range:1550");
         /// <param name="e"></param>
         void button3_Click(object sender, EventArgs e)
         {
-            isEnLang = false;
-            isRuLang = true;
-            StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
-            var line = sr.ReadToEnd().Split(ch);
-            notifyIcon1.BalloonTipText = "Приложение свернуто";
-            closeToolStripMenuItem.Text = "Выход";
-            button1.Text = "Выбрать";
-            button2.Text = "Применить";
-            checkBox1.Text = "Сохранить настройки";
-            label1.Text = "Готово";
-            label2.Text = "Информация о клиенте:";
-            if (isReaded || isWrited)
+            if(!isRuLang)
             {
-                textBox1.Text = line[1].Trim();
-                textBox2.Text = line[3].Trim();
-                label3.Text = "Версия клиента = " + line[5].Trim();
-                label4.Text = "Версия исх.кода = " + line[7].Trim();
-                label5.Text = "Дата релиза = " + line[9].Trim();
-                label6.Text = "Время релиза = " + line[11].Trim();
+                isEnLang = false;
+                isRuLang = true;
+                StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+                var line = sr.ReadToEnd().Split(ch);
+                notifyIcon1.BalloonTipText = "Приложение свернуто";
+                closeToolStripMenuItem.Text = "Выход";
+                button1.Text = "Выбрать";
+                button2.Text = "Применить";
+                checkBox1.Text = "Сохранить настройки";
+                label1.Text = "Готово";
+                label2.Text = "Информация о клиенте:";
+                if (isReaded || isWrited)
+                {
+                    textBox1.Text = line[1].Trim();
+                    textBox2.Text = line[3].Trim();
+                    label3.Text = "Версия клиента = " + line[5].Trim();
+                    label4.Text = "Версия исх.кода = " + line[7].Trim();
+                    label5.Text = "Дата релиза = " + line[9].Trim();
+                    label6.Text = "Время релиза = " + line[11].Trim();
+                }
+                else
+                {
+                    if (!isDllExists)
+                    {
+                        textBox1.Text = "Путь к папке Steam";
+                    }
+                    else
+                    {
+                        parseInfoFile();
+                    }
+                    textBox2.Text = "Укажите дальность камеры";
+                   
+                }
+                sr.Close();
             }
-            else
-            {
-                textBox1.Text = "Путь к папке Steam";
-                textBox2.Text = "Укажите дальность камеры";
-                label3.Text = "Версия клиента = ";
-                label4.Text = "Версия исх.кода = ";
-                label5.Text = "Дата релиза = ";
-                label6.Text = "Время релиза = ";
-            }
-            sr.Close();
+            
         }
 
         /// <summary>
@@ -254,38 +286,45 @@ Recommended range:1550");
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            isRuLang = false;
-            isEnLang = true;
-            StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
-            var line = sr.ReadToEnd().Split(ch);
-            notifyIcon1.BalloonTipText = "App minimized";
-            closeToolStripMenuItem.Text = "Exit";
-            button1.Text = "Select";
-            button2.Text = "Apply";
-            checkBox1.Text = "Save Settings";
-            label1.Text = "Ready";
-            label2.Text = "Dota Client Info:";
-            runGameToolStripMenuItem.Text = "Запустить клиент игры";
-            exitGameToolStripMenuItem.Text = "Выйти из игры";
-            if (isReaded || isWrited)
+            if(!isEnLang)
             {
-                textBox1.Text = line[1].Trim();
-                textBox2.Text = line[3].Trim();
-                label3.Text = "Client Version = " + line[5].Trim();
-                label4.Text = "Source Revision = " + line[7].Trim();
-                label5.Text = "Version Date = " + line[9].Trim();
-                label6.Text = "Version Time = " + line[11].Trim();
-            }
-            else
-            {
-                textBox1.Text = "Steam folder path";
-                textBox2.Text = "Specify camera range";
-                label3.Text = "Client Version = ";
-                label4.Text = "Source Revision = ";
-                label5.Text = "Version Date = ";
-                label6.Text = "Version Time = ";
-            }
-            sr.Close();
+                isRuLang = false;
+                isEnLang = true;
+                StreamReader sr = new StreamReader(settingsFileName); // читаем файл с помощью делиметра после открытия
+                var line = sr.ReadToEnd().Split(ch);
+                notifyIcon1.BalloonTipText = "App minimized";
+                closeToolStripMenuItem.Text = "Exit";
+                button1.Text = "Select";
+                button2.Text = "Apply";
+                checkBox1.Text = "Save Settings";
+                label1.Text = "Ready";
+                label2.Text = "Dota Client Info:";
+                runGameToolStripMenuItem.Text = "Запустить клиент игры";
+                exitGameToolStripMenuItem.Text = "Выйти из игры";
+                if (isReaded || isWrited)
+                {
+                    textBox1.Text = line[1].Trim();
+                    textBox2.Text = line[3].Trim();
+                    label3.Text = "Client Version = " + line[5].Trim();
+                    label4.Text = "Source Revision = " + line[7].Trim();
+                    label5.Text = "Version Date = " + line[9].Trim();
+                    label6.Text = "Version Time = " + line[11].Trim();
+                }
+                else
+                {
+                    if (!isDllExists)
+                    {
+                        textBox1.Text = "Steam folder path";
+                    }
+                    else
+                    {
+                        parseInfoFile();
+                    }
+                    textBox2.Text = "Specify camera range";
+                    parseInfoFile();
+                }
+                sr.Close();
+            }            
         }        
 
         void button1_Click(object sender, EventArgs e)
@@ -312,27 +351,11 @@ Recommended range:1550");
                             textBox2.Enabled = true;
                             button2.Enabled = true;
                             checkBox1.Enabled = true;
+                            checkBox2.Enabled = true;
                             runGameToolStripMenuItem.Visible = true;
-                            exitGameToolStripMenuItem.Enabled = true;                            
+                            exitGameToolStripMenuItem.Enabled = true;
 
-                            StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
-                            var text1 = str.ReadToEnd().Split(ch);
-
-                            if (isEnLang)
-                            {
-                                label3.Text = "Client Version = " + text1[1].Trim();
-                                label4.Text = "Source Revision = " + text1[15].Trim();
-                                label5.Text = "Version Date = " + text1[17].Trim();
-                                label6.Text = "Version Time = " + text1[19].Trim();
-                            }
-                            else
-                            {
-                                label3.Text = "Версия клиента = " + text1[1].Trim();
-                                label4.Text = "Версия исх.кода = " + text1[15].Trim();
-                                label5.Text = "Дата релиза = " + text1[17].Trim();
-                                label6.Text = "Время релиза = " + text1[19].Trim();
-                            }
-                            str.Close();
+                            parseInfoFile();                            
 
                             txt("Файл client.dll есть");
                         }                       
@@ -390,12 +413,7 @@ Recommended range:1550");
         static void txt(String s)
         {
             Console.WriteLine(s);           
-        }
-
-        private void Form1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
+        }       
 
         bool checkRun(bool Msg)
         {
@@ -410,6 +428,8 @@ Recommended range:1550");
                 }
                 button1.Enabled = false;
                 button2.Enabled = false;
+                button3.Enabled = false;
+                button4.Enabled = false;
                 pictureBox3.Enabled = false;
                 pictureBox4.Enabled = true;
                 runGameToolStripMenuItem.Enabled = false;
@@ -417,14 +437,19 @@ Recommended range:1550");
                 return true;
                 
             }
-            button1.Enabled = true;            
+            button1.Enabled = true;
+            button3.Enabled = true;
+            button4.Enabled = true;
             pictureBox3.Enabled = true;
             pictureBox4.Enabled = false;
             if(isDllExists)
             {
+                checkUpd();
+                button2.Enabled = true;
                 runGameToolStripMenuItem.Enabled = true;
             }            
             exitGameToolStripMenuItem.Enabled = false;
+           
             return false;
         }      
 
@@ -432,14 +457,63 @@ Recommended range:1550");
         {
             for(;;)
             {
-                checkRun(false);
+                checkRun(false);               
             }            
         }
 
         void checkUpd()
         {
+            var path = textBox1.Text + infoPath;
+            if (checkBox2.Checked == true)
+            {
+                fileSystemWatcher1.Path = path;
+                fileSystemWatcher1.EnableRaisingEvents = true;
+            }
+                       
+            //StreamReader str = new StreamReader(path);
+            //var text1 = str.ReadToEnd().Split(ch);
+            //if (isEnLang)
+            //{
+            //    label3.Text = "Client Version = " + text1[1].Trim();
+            //    label4.Text = "Source Revision = " + text1[15].Trim();
+            //    label5.Text = "Version Date = " + text1[17].Trim();
+            //    label6.Text = "Version Time = " + text1[19].Trim();
+            //}
+            //else
+            //{
+            //    label3.Text = "Версия клиента = " + text1[1].Trim();
+            //    label4.Text = "Версия исх.кода = " + text1[15].Trim();
+            //    label5.Text = "Дата релиза = " + text1[17].Trim();
+            //    label6.Text = "Время релиза = " + text1[19].Trim();
+            //}
+        }
+
+        private void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e)
+        {
+            notifyIcon1_MouseDoubleClick(null, null);
+            MessageBox.Show("Клиент игры обновился");            
+        }
+
+        void parseInfoFile()
+        {
             StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
             var text1 = str.ReadToEnd().Split(ch);
+
+            if (isEnLang)
+            {
+                label3.Text = "Client Version = " + text1[1].Trim();
+                label4.Text = "Source Revision = " + text1[15].Trim();
+                label5.Text = "Version Date = " + text1[17].Trim();
+                label6.Text = "Version Time = " + text1[19].Trim();
+            }
+            else
+            {
+                label3.Text = "Версия клиента = " + text1[1].Trim();
+                label4.Text = "Версия исх.кода = " + text1[15].Trim();
+                label5.Text = "Дата релиза = " + text1[17].Trim();
+                label6.Text = "Время релиза = " + text1[19].Trim();
+            }
+            str.Close();
         }
     }
 }
