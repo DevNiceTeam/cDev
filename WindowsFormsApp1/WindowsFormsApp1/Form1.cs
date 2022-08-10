@@ -147,6 +147,8 @@ namespace WindowsFormsApp1
         char[] ch = { '\n', '=' };
         bool isRuLang, isEnLang;
         Thread thr;
+        private bool isShowed;
+
 
         void Form1_Load(object sender, EventArgs e)
         {
@@ -322,7 +324,7 @@ Recommended range:1550");
                 }
                 textBox2.Text = "Specify camera range";
                 checkBox2.Text = "Enable tracking game client updates";
-                
+
             }
             sr.Close();
         }
@@ -486,16 +488,24 @@ Recommended range:1550");
 
         private void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e)
         {
-            notifyIcon1_MouseDoubleClick(null, null);
-            if (isEnLang)
+            if (!isShowed) // MessageBox выскакивает два раза я так понимаю из за fsw хз почему слишком туп) 
             {
-                MessageBox.Show("", "Cum Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                isShowed = true;
+
+                notifyIcon1_MouseDoubleClick(null, null);
+                if (isEnLang)
+                {
+                    MessageBox.Show("The client game has been updated, the program is automatically synchronized with the fresh client program!", "Cum Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Клиент игры обновился, программа автоматически синхронизируется со свежим клиентом игры!", "Cum Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                parseInfoFile(true);
+
+                isShowed = false;
             }
-            else
-            {
-                MessageBox.Show("The client game has been updated, the program is automatically synchronized with the fresh client program!", "Cum Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            parseInfoFile(true);
+            
         }
 
         void parseInfoFile(bool fullPars)
