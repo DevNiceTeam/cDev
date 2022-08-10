@@ -219,7 +219,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Gunplay", 16.2F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(107, 255);
+            this.label1.Location = new System.Drawing.Point(107, 270);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 34);
             this.label1.TabIndex = 13;
@@ -312,9 +312,9 @@
             this.checkBox2.ForeColor = System.Drawing.Color.White;
             this.checkBox2.Location = new System.Drawing.Point(10, 654);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(260, 26);
+            this.checkBox2.Size = new System.Drawing.Size(381, 26);
             this.checkBox2.TabIndex = 18;
-            this.checkBox2.Text = "Включить отслеживание клиента";
+            this.checkBox2.Text = "Включить отслеживание обновлений клиента игры";
             this.checkBox2.UseVisualStyleBackColor = false;
             // 
             // pictureBox3
@@ -349,6 +349,8 @@
             // 
             // fileSystemWatcher1
             // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.Filter = "*.inf*";
             this.fileSystemWatcher1.SynchronizingObject = this;
             this.fileSystemWatcher1.Changed += new System.IO.FileSystemEventHandler(this.fileSystemWatcher1_Changed);
             // 
