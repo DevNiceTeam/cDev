@@ -65,8 +65,7 @@ namespace WindowsFormsApp1
 
             using (StreamWriter sw = new StreamWriter(f.fullPath, false, Encoding.Default))
             {
-                sw.Write(line); 
-                f.label1.Visible = true;
+                sw.Write(line);                 
             }
         }
     }   

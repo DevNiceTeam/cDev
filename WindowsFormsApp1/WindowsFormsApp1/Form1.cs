@@ -1,7 +1,9 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,17 +24,19 @@ namespace WindowsFormsApp1
             WindowState = FormWindowState.Normal;
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+        private void Form1_Resize(object sender, EventArgs e) // свернуть в трей
         {
             if (WindowState == FormWindowState.Minimized)
             {
                 this.Hide();
                 notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(1000);
+                UpdStripMenuItem(false);
             }
             else if (FormWindowState.Normal == this.WindowState)
             {
                 notifyIcon1.Visible = false;
+                UpdStripMenuItem(true);
             }
         }
 
@@ -69,7 +73,7 @@ namespace WindowsFormsApp1
 
         private void textBox2_Leave(object sender, EventArgs e)
         {
-            if (!isWrited | !isReaded | !isDllExists)
+            if (!isDllExists)
             {
                 if (isEnLang)
                 {
@@ -148,7 +152,8 @@ namespace WindowsFormsApp1
         bool isRuLang, isEnLang;
         Thread thr;
         private bool isShowed;
-
+        bool isBeginWirtten;
+        bool isClientUpdated;
 
         void Form1_Load(object sender, EventArgs e)
         {
@@ -157,6 +162,7 @@ namespace WindowsFormsApp1
             //checkRun(true);
             thr = new Thread(iterCheckRun);
             thr.Start();
+
 
             if (File.Exists(settingsFileName))
             {
@@ -174,38 +180,54 @@ namespace WindowsFormsApp1
                 }
                 else // Если файл настроек не пустой то cчитываем файл выбираем путь и записываем его в TextBox 
                 {
-                    var line = text.Split(ch);
-                    string t = line[13].Trim();
-
-                    if (t.Equals("RU"))
+                    try
                     {
+                        var line = text.Split(ch);
+                        string t = line[13].Trim();
+
+                        if (t.Equals("RU"))
+                        {
+                            button3.PerformClick();
+                            textBox1.Text = line[1].Trim();
+                            textBox2.Text = line[3].Trim();
+                            txt($"Сейчас записан {t}");
+                            isRuLang = true;
+                            isEnLang = false;
+                            label3.Text = "Версия клиента = " + line[5].Trim();
+                            label4.Text = "Версия исх.кода = " + line[7].Trim();
+                            label5.Text = "Дата релиза = " + line[9].Trim();
+                            label6.Text = "Время релиза = " + line[11].Trim();
+                        }
+                        else
+                        {
+                            button4.PerformClick();
+                            textBox1.Text = line[1].Trim();
+                            textBox2.Text = line[3].Trim();
+                            txt($"Сейчас записан {t}");
+                            isRuLang = false;
+                            isEnLang = true;
+                            label3.Text = "Client Version = " + line[5].Trim();
+                            label4.Text = "Source Revision = " + line[7].Trim();
+                            label5.Text = "Version Date = " + line[9].Trim();
+                            label6.Text = "Version Time = " + line[11].Trim();
+
+                        }
+                        isReaded = true;
+                        checkBox1.CheckState = CheckState.Checked;
+                        oldParam = textBox2.Text;
+                    }
+                    catch
+                    {
+                        sr.Close();
+                        Console.WriteLine(isReaded.ToString());
+                        MessageBox.Show("Сброс настроек");
+                        File.Delete(settingsFileName);
+                        FileStream fst = new FileStream(settingsFileName, FileMode.Create);
+                        txt("Создаю settings");
+                        isCreated = true;
+                        fst.Close();
                         button3.PerformClick();
-                        textBox1.Text = line[1].Trim();
-                        textBox2.Text = line[3].Trim();
-                        txt($"Сейчас записан {t}");
-                        isRuLang = true;
-                        isEnLang = false;
-                        label3.Text = "Версия клиента = " + line[5].Trim();
-                        label4.Text = "Версия исх.кода = " + line[7].Trim();
-                        label5.Text = "Дата релиза = " + line[9].Trim();
-                        label6.Text = "Время релиза = " + line[11].Trim();
                     }
-                    else
-                    {
-                        button4.PerformClick();
-                        textBox1.Text = line[1].Trim();
-                        textBox2.Text = line[3].Trim();
-                        txt($"Сейчас записан {t}");
-                        isRuLang = false;
-                        isEnLang = true;
-                        label3.Text = "Client Version = " + line[5].Trim();
-                        label4.Text = "Source Revision = " + line[7].Trim();
-                        label5.Text = "Version Date = " + line[9].Trim();
-                        label6.Text = "Version Time = " + line[11].Trim();
-
-                    }
-                    isReaded = true;
-                    oldParam = textBox2.Text;
                 }
                 sr.Close();
             }
@@ -255,6 +277,9 @@ Recommended range:1550");
             checkBox1.Text = "Сохранить настройки";
             label1.Text = "Готово";
             label2.Text = "Информация о клиенте:";
+            runGameToolStripMenuItem.Text = "Запустить клиент игры";
+            exitGameToolStripMenuItem.Text = "Выйти из игры";
+            checkBox2.Text = "Включить отслеживание обновлений клиента игры";
             if (isReaded | isWrited)
             {
                 textBox1.Text = line[1].Trim();
@@ -264,19 +289,19 @@ Recommended range:1550");
                 label5.Text = "Дата релиза = " + line[9].Trim();
                 label6.Text = "Время релиза = " + line[11].Trim();
             }
-            else // если первый запуск программы
+            else
             {
                 if (isDllExists)
                 {
-                    parseInfoFile(true);
+                    parseInfoFile(true, true);
                 }
                 else
                 {
                     textBox1.Text = "Путь к папке Steam";
-                    parseInfoFile(false);
+                    parseInfoFile(false, false);
                 }
                 textBox2.Text = "Укажите дальность камеры";
-                checkBox2.Text = "Включить отслеживание обновлений клиента игры";
+                
             }
             sr.Close();
         }
@@ -300,8 +325,9 @@ Recommended range:1550");
             checkBox1.Text = "Save Settings";
             label1.Text = "Ready";
             label2.Text = "Dota Client Info:";
-            runGameToolStripMenuItem.Text = "Запустить клиент игры";
-            exitGameToolStripMenuItem.Text = "Выйти из игры";
+            runGameToolStripMenuItem.Text = "Run Game Client";
+            exitGameToolStripMenuItem.Text = "Exit Game";
+            checkBox2.Text = "Enable tracking game client updates";
             if (isReaded | isWrited)
             {
                 textBox1.Text = line[1].Trim();
@@ -311,19 +337,19 @@ Recommended range:1550");
                 label5.Text = "Version Date = " + line[9].Trim();
                 label6.Text = "Version Time = " + line[11].Trim();
             }
-            else // если первый запуск программы
+            else
             {
                 if (isDllExists)
                 {
-                    parseInfoFile(true);
+                    parseInfoFile(true, true);
                 }
                 else
                 {
                     textBox1.Text = "Steam folder path";
-                    parseInfoFile(false);
+                    parseInfoFile(false, false);
                 }
                 textBox2.Text = "Specify camera range";
-                checkBox2.Text = "Enable tracking game client updates";
+                
 
             }
             sr.Close();
@@ -357,7 +383,7 @@ Recommended range:1550");
                             runGameToolStripMenuItem.Visible = true;
                             exitGameToolStripMenuItem.Enabled = true;
 
-                            parseInfoFile(true);
+                            parseInfoFile(true, true);
 
                             txt("Файл client.dll есть");
                         }
@@ -373,6 +399,14 @@ Recommended range:1550");
 
         void button2_Click(object sender, EventArgs e)
         {
+            isBeginWirtten = true;
+            if (progressBar1.Value == progressBar1.Maximum)
+            {
+                progressBar1.Value = 0;
+                Application.DoEvents();
+            }
+            timer1.Enabled = true;
+            timer1.Start();
             if (checkBox1.Checked == true)
             {
                 txt("Записываю");
@@ -409,15 +443,32 @@ Recommended range:1550");
 
                 sw.Close();
                 isWrited = true;
-                new Parse(this).pars();
-
+                startPars();
             }
             else
             {
                 txt("Меняю");
                 isWrited = false;
-                new Parse(this).pars();
+                startPars();
             }
+        }
+
+        async void startPars()
+        {
+            button2.Enabled = false;
+            new Parse(this).pars();
+            await Task.Delay(5000);
+            timer1.Stop();
+            timer1.Enabled = false;
+            label1.Visible = true;
+            isBeginWirtten = false;
+            await Task.Delay(5000);
+            label1.Visible = false;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            progressBar1.PerformStep();
         }
 
         static void txt(String s)
@@ -455,14 +506,22 @@ Recommended range:1550");
             if (isDllExists)
             {
                 if (checkBox2.Checked == true)
-                {
+                {                    
                     checkUpd();
                 }
                 else
-                {
+                {                    
                     fileSystemWatcher1.EnableRaisingEvents = false;
+                    проверкаКлиентаToolStripMenuItem.Visible = false;
                 }
-                button2.Enabled = true;
+                if (isBeginWirtten)
+                {
+                    button2.Enabled = false;
+                }
+                else
+                {
+                    button2.Enabled = true;
+                }
                 runGameToolStripMenuItem.Enabled = true;
             }
             exitGameToolStripMenuItem.Enabled = false;
@@ -473,7 +532,7 @@ Recommended range:1550");
         void iterCheckRun()
         {
             for (; ; )
-            {
+            {                
                 checkRun(false);
             }
         }
@@ -484,6 +543,30 @@ Recommended range:1550");
 
             fileSystemWatcher1.Path = path;
             fileSystemWatcher1.EnableRaisingEvents = true;
+            проверкаКлиентаToolStripMenuItem.Visible = true;            
+        }
+
+        async void UpdStripMenuItem(bool bt)
+        {
+            txt("Я тут");
+            проверкаКлиентаToolStripMenuItem.Text = "Проверка клиента";
+            string[] point =
+            {
+                    ".",
+                    ".",
+                    "."
+            };
+
+            for (int i = 0; !bt; i++)
+            {                
+                if (i >= point.Length)
+                {
+                    i = 0;
+                    проверкаКлиентаToolStripMenuItem.Text = "Проверка клиента";
+                }
+                await Task.Delay(1000);
+                проверкаКлиентаToolStripMenuItem.Text += point[i];
+            }
         }
 
         private void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e)
@@ -501,16 +584,15 @@ Recommended range:1550");
                 {
                     MessageBox.Show("Клиент игры обновился, программа автоматически синхронизируется со свежим клиентом игры!", "Cum Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                parseInfoFile(true);
+                parseInfoFile(true, true);
 
                 isShowed = false;
             }
-            
         }
 
-        void parseInfoFile(bool fullPars)
+        void parseInfoFile(bool Read, bool Write)
         {
-            if (fullPars)
+            if (Read)
             {
                 StreamReader str = new StreamReader(textBox1.Text + infoPath + infoFileName);
                 var text1 = str.ReadToEnd().Split(ch);
@@ -530,6 +612,7 @@ Recommended range:1550");
                     label6.Text = "Время релиза = " + text1[19].Trim();
                 }
                 str.Close();
+                
             }
             else
             {
@@ -548,6 +631,27 @@ Recommended range:1550");
                     label6.Text = "Время релиза = ";
                 }
             }
+
+            if (Write)
+            {
+                var text1 = label3.Text.Split(ch);
+                var text2 = label4.Text.Split(ch);
+                var text3 = label5.Text.Split(ch);
+                var text4 = label6.Text.Split(ch);
+                var index = 1;
+
+                lineChanger("ClientVersion = " + text1[index].Trim(),3);
+                lineChanger("SourceRevision = " + text2[index].Trim(),4);
+                lineChanger("VersionDate = " + text3[index].Trim(),5);
+                lineChanger("VersionTime = " + text4[index].Trim(),6);
+            }            
+        }
+
+        void lineChanger(string newText, int line_to_edit)
+        {
+            string[] arrLine = File.ReadAllLines(settingsFileName);
+            arrLine[line_to_edit - 1] = newText;
+            File.WriteAllLines(settingsFileName, arrLine);
         }
     }
 }

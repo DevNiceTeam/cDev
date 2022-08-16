@@ -46,6 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.проверкаКлиентаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +56,8 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -219,7 +222,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Gunplay", 16.2F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(107, 270);
+            this.label1.Location = new System.Drawing.Point(103, 304);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 34);
             this.label1.TabIndex = 13;
@@ -249,11 +252,20 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.проверкаКлиентаToolStripMenuItem,
             this.runGameToolStripMenuItem,
             this.exitGameToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(237, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(237, 128);
+            // 
+            // проверкаКлиентаToolStripMenuItem
+            // 
+            this.проверкаКлиентаToolStripMenuItem.Enabled = false;
+            this.проверкаКлиентаToolStripMenuItem.Name = "проверкаКлиентаToolStripMenuItem";
+            this.проверкаКлиентаToolStripMenuItem.Size = new System.Drawing.Size(236, 24);
+            this.проверкаКлиентаToolStripMenuItem.Text = "Проверка клиента...";
+            this.проверкаКлиентаToolStripMenuItem.Visible = false;
             // 
             // runGameToolStripMenuItem
             // 
@@ -354,6 +366,19 @@
             this.fileSystemWatcher1.SynchronizingObject = this;
             this.fileSystemWatcher1.Changed += new System.IO.FileSystemEventHandler(this.fileSystemWatcher1_Changed);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(28, 268);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(264, 23);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar1.TabIndex = 21;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 500;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -362,6 +387,7 @@
             this.BackgroundImage = global::CumEditor.Properties.Resources._00939dff0059e823658afe98bb6d87a4;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1285, 727);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.checkBox2);
@@ -429,6 +455,9 @@
         private System.Windows.Forms.ToolStripMenuItem runGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitGameToolStripMenuItem;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem проверкаКлиентаToolStripMenuItem;
     }
 }
 
