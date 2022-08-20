@@ -219,7 +219,6 @@ namespace WindowsFormsApp1
                     catch
                     {
                         sr.Close();
-                        Console.WriteLine(isReaded.ToString());
                         MessageBox.Show("Сброс настроек");
                         File.Delete(settingsFileName);
                         FileStream fst = new FileStream(settingsFileName, FileMode.Create);
@@ -383,7 +382,7 @@ Recommended range:1550");
                             runGameToolStripMenuItem.Visible = true;
                             exitGameToolStripMenuItem.Enabled = true;
 
-                            parseInfoFile(true, true);
+                            parseInfoFile(true, false); // TODO Если перезаписывать(== true) процесс занят что нибудь придумать!?)
 
                             txt("Файл client.dll есть");
                         }
@@ -634,16 +633,19 @@ Recommended range:1550");
 
             if (Write)
             {
-                var text1 = label3.Text.Split(ch);
-                var text2 = label4.Text.Split(ch);
-                var text3 = label5.Text.Split(ch);
-                var text4 = label6.Text.Split(ch);
-                var index = 1;
+                if (!isReaded)
+                {
+                    var text1 = label3.Text.Split(ch);
+                    var text2 = label4.Text.Split(ch);
+                    var text3 = label5.Text.Split(ch);
+                    var text4 = label6.Text.Split(ch);
+                    var index = 1;
 
-                lineChanger("ClientVersion = " + text1[index].Trim(),3);
-                lineChanger("SourceRevision = " + text2[index].Trim(),4);
-                lineChanger("VersionDate = " + text3[index].Trim(),5);
-                lineChanger("VersionTime = " + text4[index].Trim(),6);
+                    lineChanger("ClientVersion = " + text1[index].Trim(), 3);
+                    lineChanger("SourceRevision = " + text2[index].Trim(), 4);
+                    lineChanger("VersionDate = " + text3[index].Trim(), 5);
+                    lineChanger("VersionTime = " + text4[index].Trim(), 6);
+                }                
             }            
         }
 
